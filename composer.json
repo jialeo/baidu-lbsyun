@@ -1,0 +1,17 @@
+{
+    "name": "jialeo/baidu-lbsyun",
+    "description": "Baidu lbsyun sdk",
+    "keywords": ["Baidu", "lbsyun", "PHP"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liang",
+            "email": "chenjialiang@han-zi.cn"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "JiaLeo\\Baidu\\LBSYun\\": "src/"
+        }
+    }
+}
