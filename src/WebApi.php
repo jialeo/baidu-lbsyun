@@ -62,6 +62,13 @@ class WebApi
         return false;
     }
 
+    /**
+     * 正地理编码
+     * @param $address
+     * @param string $city
+     * @param string $coordtype
+     * @return bool|mixed
+     */
     public function geocoding($address, $city = '', $coordtype = '')
     {
         $url = 'http://api.map.baidu.com/geocoding/v3/?';
