@@ -25,17 +25,57 @@ class WebApi
      * @param array $extra
      * @return bool|mixed
      */
-    public function geocoder($location, $pois = 1, $coordtype = '', $extra = array())
+    public function reverseGeocoding($location, $extensions_poi = 1, $coordtype = '', $extra = array())
     {
 
-        $url = 'http://api.map.baidu.com/geocoder/v2/?';
-        $uri = '/geocoder/v2/';
+        $url = 'http://api.map.baidu.com/reverse_geocoding/v3/?';
+        $uri = '/reverse_geocoding/v3/';
         $query_data = array(
             'location' => $location,
             'output' => 'json',
-            'pois' => $pois,
+            'extensions_poi' => $extensions_poi,
             'ak' => $this->ak,
+            'language' => 'zh-CN'
         );
+
+        if (!empty($coordtype)) {
+            $query_data['coordtype'] = $coordtype;
+        }
+
+        if (!empty($extra)) {
+            $query_data = array_merge($query_data, $extra);
+        }
+
+        $url .= http_build_query($query_data);
+        $sn = $this->caculateAKSN($this->sk, $uri, $query_data);
+        $url = $url . '&sn=' . $sn;
+        $result = $this->http_get($url);
+        if ($result) {
+            $json = json_decode($result, true);
+            if (!$json || !empty($json['errcode'])) {
+                $this->errCode = $json['status'];
+                $this->errMsg = empty($json['message'] ? '' : $json['message']);
+                return false;
+            }
+            return $json;
+        }
+        return false;
+    }
+
+    public function geocoding($address, $city = '', $coordtype = '')
+    {
+        $url = 'http://api.map.baidu.com/geocoding/v3/?';
+        $uri = '/geocoding/v3/';
+        $query_data = array(
+            'address' => $address,
+            'output' => 'json',
+            'ak' => $this->ak,
+            'language' => 'zh-CN'
+        );
+
+        if (!empty($city)) {
+            $query_data['city'] = $city;
+        }
 
         if (!empty($coordtype)) {
             $query_data['coordtype'] = $coordtype;
